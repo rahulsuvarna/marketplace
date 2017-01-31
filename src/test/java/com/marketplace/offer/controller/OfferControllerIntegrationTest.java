@@ -5,7 +5,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;

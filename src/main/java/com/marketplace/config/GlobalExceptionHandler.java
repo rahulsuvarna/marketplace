@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
+
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
  * Generic Exception Handler will intercept all errors and exception and return a friendly message
  * 
@@ -18,6 +20,7 @@ import org.springframework.web.context.request.WebRequest;
  */
 @ControllerAdvice
 @RestController
+@EnableSwagger2
 public class GlobalExceptionHandler {
 
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);

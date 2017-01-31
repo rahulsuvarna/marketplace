@@ -42,9 +42,9 @@ public class OfferController {
 	 */
     @RequestMapping(value = "/offers/add", method = RequestMethod.POST)
     @ResponseBody
-	public ResponseEntity<List<OfferDTO>> addOffers(@Valid @RequestBody List<OfferDTO> lOfOfferDTOs) {
+	public ResponseEntity<List<OfferDTO>> addOffers(@Valid @RequestBody final List<OfferDTO> lOfOfferDTOs) {
 		log.debug("Servicing request to add an Offer");
-		List<OfferDTO> lOfAddedOfferDTOs = offerService.bulkAdd(lOfOfferDTOs);
+		final List<OfferDTO> lOfAddedOfferDTOs = offerService.bulkAdd(lOfOfferDTOs);
 		if (lOfAddedOfferDTOs == null || lOfAddedOfferDTOs.isEmpty()) {
 			return new ResponseEntity<List<OfferDTO>>(HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
@@ -64,7 +64,7 @@ public class OfferController {
     @ResponseBody
 	public ResponseEntity<List<OfferDTO>> findAll() {
 		log.debug("Servicing request to find all Offers");
-		List<OfferDTO> findAllOffers = offerService.findAllOffers();
+		final List<OfferDTO> findAllOffers = offerService.findAllOffers();
 		if (findAllOffers == null || findAllOffers.isEmpty()) {
 			return new ResponseEntity<List<OfferDTO>>(HttpStatus.NO_CONTENT);
 		} else {
@@ -74,9 +74,9 @@ public class OfferController {
     
     @RequestMapping(value = "/offers/find/{merchantId}", method = RequestMethod.GET)
     @ResponseBody
-	public ResponseEntity<List<OfferDTO>> findOffersByMerchantId( @PathVariable("merchantId") Long merchantId) {
+	public ResponseEntity<List<OfferDTO>> findOffersByMerchantId( @PathVariable("merchantId") final Long merchantId) {
 		log.debug("Servicing request to find Offers from a Merchant");
-		List<OfferDTO> findAllOffers = offerService.findOffersForMerchantId(merchantId);
+		final List<OfferDTO> findAllOffers = offerService.findOffersForMerchantId(merchantId);
 		if (findAllOffers == null || findAllOffers.isEmpty()) {
 			return new ResponseEntity<List<OfferDTO>>(HttpStatus.NO_CONTENT);
 		} else {

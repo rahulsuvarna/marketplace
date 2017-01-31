@@ -33,7 +33,7 @@ public class OfferRepositoryIntegrationTest {
 	@Autowired
 	private OfferRepository offerRepository;
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() throws Exception {		
 		offerRepository.deleteAll();
 	}
 

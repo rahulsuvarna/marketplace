@@ -20,7 +20,7 @@ public class OfferServiceImpl implements IOfferService {
 	 * Service method to add a single Offer
 	 */
 	@Override
-	public OfferDTO addOffer(OfferDTO anOfferDTO) {
+	public OfferDTO addOffer(final OfferDTO anOfferDTO) {
 		assertNotNull("OfferDTO is null", anOfferDTO);
 		return offerRepository.save(anOfferDTO);
 	}
@@ -43,7 +43,7 @@ public class OfferServiceImpl implements IOfferService {
 	}
 
 	@Override
-	public List<OfferDTO> findOffersForMerchantId(Long merchantId) {
+	public List<OfferDTO> findOffersForMerchantId(final Long merchantId) {
 		// TODO Auto-generated method stub
 		return offerRepository.findByMerchantId(merchantId);
 	}

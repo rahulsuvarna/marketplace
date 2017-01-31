@@ -22,12 +22,12 @@ public class OfferDTO {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(name = "TITLE")
+	@Column(name = "TITLE", nullable=false)
 	private String title;
 	
 	@Column(name = "DESCRIPTION")
 	private String description;
-	@Column(name = "TYPE_ID")
+	@Column(name = "TYPE_ID", nullable=false)
 	private Long typeId;
 
 	@JsonIgnore
@@ -35,7 +35,7 @@ public class OfferDTO {
 	@JoinColumn(name = "TYPE_ID", nullable = false, insertable = false, updatable = false)
 	private OfferTypeDTO offerType;
 
-	@Column(name = "MERCHANT_ID")
+	@Column(name = "MERCHANT_ID", nullable=false)
 	private Long merchantId;
 
 	@JsonIgnore
