@@ -26,11 +26,14 @@
 	</properties>
 
 	<dependencies>
-
-        <dependency>
+	    <dependency>
+	        <groupId>org.springframework.boot</groupId>
+	        <artifactId>spring-boot-devtools</artifactId>
+	    </dependency>
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-actuator</artifactId>
-        </dependency>
+        </dependency> -->
 
         <!-- web development, including Tomcat and spring-webmvc -->
         <dependency>

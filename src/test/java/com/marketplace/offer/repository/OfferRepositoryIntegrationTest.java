@@ -39,18 +39,17 @@ public class OfferRepositoryIntegrationTest {
 
 	@Test
 	public void testSaveOfferSuccess() throws Exception {
-
 		final Date validFromDate = dateformat.parse("2017-01-30");
 		final Date validToDate = dateformat.parse("2017-02-20");
 		
-		final OfferDTO offerDTO = new OfferDTO( "Title1", "Description", 1L, 1L, validFromDate, validToDate);
+		final OfferDTO offerDTO = new OfferDTO( "Title1", "Description", 100057L, 1L, validFromDate, validToDate);
 		final OfferDTO savedOffer = offerRepository.save(offerDTO);
 
 		assertThat(savedOffer, notNullValue());
 		assertThat(savedOffer.getId(), notNullValue());
 		assertThat(savedOffer.getTitle(), is("Title1"));
 		assertThat(savedOffer.getDescription(), is("Description"));
-		assertThat(savedOffer.getTypeId(), is(1L));
+		assertThat(savedOffer.getTypeId(), is(100057L));
 		assertThat(savedOffer.getMerchantId(), is(1L));
 	}
 

@@ -46,7 +46,7 @@ public class OfferControllerIntegrationTest {
         assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
 		assertThat(body, notNullValue());
-		assertThat(body.length, is(2));
+		assertThat(body.length, is(3));
         
 	}
 	@Test

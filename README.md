@@ -9,6 +9,9 @@ The service is a simple *Merchant Offer* creation REST service. It uses an in-me
 API documentation is available after application startup
 http://localhost:8080/swagger-ui.html
 
+The H2 DB console is available under
+http://localhost:8080/dbconsole/
+
 Features in this application : 
 * Full integration with the latest **Spring** Framework: inversion of control, dependency injection, etc.
 * Packaging as a single war with embedded container (tomcat 7): No need to install a container separately on the host just run using the ``java -jar`` command
