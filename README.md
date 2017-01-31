@@ -91,7 +91,7 @@ Content-Type: application/json
 RESPONSE: HTTP 201 (Created)
 ```
 
-### Retrieve a list of offers
+### Retrieve all Offers
 ```
 GET http://localhost:8080/offers/find/all
 Content-Type: application/json
