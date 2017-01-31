@@ -63,9 +63,12 @@ Merchant and OfferType data are pre-populated into the database using *import.sq
 
 *TABLE NAME :* **TOFFTYPE**
 
-|ID     |OFFER_TYPE |
-|-------|-----------|
-|100057 |% off      |
+|ID     |OFFER_TYPE         |
+|-------|-------------------|
+|100057 |% off              |
+|100058 |2 for 1            |
+|100059 |FREE               |
+|100060 |BUY AND SAVE       |
 
 
 ## Endpoints to call:
@@ -90,7 +93,37 @@ RESPONSE: HTTP 201 (Created)
 
 ### Retrieve a list of offers
 ```
-GET http://localhost:8080/offers/all
+GET http://localhost:8080/offers/find/all
+Content-Type: application/json
+
+Response: HTTP 200 (OK)
+Content: list 
+[
+  {
+    "id": 1,
+    "title": "Save 20%",
+    "description": "Save 20% when you shop online",
+    "typeId": 100057,
+    "merchantId": 2,
+    "validFrom": "2017-01-11",
+    "validTo": "2017-02-11"
+  },
+  {
+    "id": 2,
+    "title": "Save 20%",
+    "description": "Save 20% with your Merchant card",
+    "typeId": 100057,
+    "merchantId": 2,
+    "validFrom": "2017-01-11",
+    "validTo": "2017-02-11"
+  }
+]
+```
+A Response: HTTP 204 (No Content) is returned when no offers are available.
+
+### Retrieve a list of offers for a Merchant using Merchant Id
+```
+GET http://localhost:8080/offers/find/{id}
 Content-Type: application/json
 
 Response: HTTP 200 (OK)
