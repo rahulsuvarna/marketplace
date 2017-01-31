@@ -50,6 +50,7 @@ An offer can only be created for an existing TMERCHNT.ID and TOFFTYPE.ID.
 
 Merchant and OfferType data are pre-populated into the database using *import.sql* during launch of the application.
 *TABLE NAME :* **TMERCHNT**
+
 |ID |   CODE|   CURRENCY_CODE   |   NAME                |  
 |---|-------|-------------------|-----------------------|
 |1  |ANZ001 |GBP                |   BINGO REPUBLIC      |
@@ -58,6 +59,7 @@ Merchant and OfferType data are pre-populated into the database using *import.sq
 |4  |PHT001 |GBP                |   THE COFFEE SHOP     |
 
 *TABLE NAME :* **TOFFTYPE**
+
 |ID     |OFFER_TYPE |
 |-------|-----------|
 |100057 |% off      |
