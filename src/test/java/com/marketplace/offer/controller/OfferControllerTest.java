@@ -1,8 +1,13 @@
 package com.marketplace.offer.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -25,19 +30,26 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.marketplace.config.GlobalExceptionHandler;
 import com.marketplace.offer.dto.OfferDTO;
-import com.marketplace.offer.service.IOfferService;
+import com.marketplace.offer.service.OfferServiceImpl;
 
 @SpringBootTest
 public class OfferControllerTest {
 
-    private MockMvc mockMvc;
+    private static final String FIND_ALL_PATH = "/offers/find/all";
+    private static final String FIND_ONE_PATH = "/offers/find/";
+
+	private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+
+	private MockMvc mockMvc;
 
     @InjectMocks
     private OfferController offerController;
@@ -46,7 +58,7 @@ public class OfferControllerTest {
     private GlobalExceptionHandler globalExceptionHandler;
     
     @Mock
-    private IOfferService offerService;
+    private OfferServiceImpl offerService;
 
     @Before
     public void init(){
@@ -59,7 +71,6 @@ public class OfferControllerTest {
 
 	@Test
 	public void testBulkAddOfferSuccess() throws Exception {
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date validFromDate = dateformat.parse("2017-01-30");
 		Date validToDate = dateformat.parse("2017-02-20");
@@ -71,20 +82,25 @@ public class OfferControllerTest {
 				new OfferDTO(1L, "Title1", "Description", 1L, 1L, validFromDate, validToDate),
 				new OfferDTO(2L, "Title2", "Description", 1L, 2L, validFromDate, validToDate));
 
-		when(offerService.bulkAdd(any())).thenReturn(actual);
+		doReturn(actual).when(offerService).bulkAdd(any());		
+		ResponseEntity<List<OfferDTO>> findAll = offerController.addOffers(lOfOffers);
+		assertThat(findAll).isNotNull();
+		assertThat(findAll.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		assertThat(findAll.getBody()).isNull();
 		
+		reset(offerService);
+		when(offerService.bulkAdd(any())).thenReturn(actual);
 		mockMvc.perform(
                 post("/offers/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(lOfOffers)))
-						.andExpect(status().isCreated());
+						.andExpect(status().isCreated()).andDo(print());
 		verify(offerService, times(1)).bulkAdd(any());
         verifyNoMoreInteractions(offerService);		
 	}
 
 	@Test
 	public void testAddSingleOfferSuccess() throws Exception {
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date validFromDate = dateformat.parse("2017-01-30");
 		Date validToDate = dateformat.parse("2017-02-20");
@@ -93,6 +109,13 @@ public class OfferControllerTest {
 		List<OfferDTO> actualOffer = Arrays.asList( new OfferDTO(1L, "TITLE", "Description", 1L, 1L, validFromDate, validToDate));
 		when(offerService.bulkAdd(any())).thenReturn(actualOffer);
 		
+		ResponseEntity<List<OfferDTO>> addOffers = offerController.addOffers(offer);
+		assertThat(addOffers).isNotNull();
+		assertThat(addOffers.getBody()).isNull();
+		assertThat(addOffers.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+		
+		reset(offerService);
+		when(offerService.bulkAdd(any())).thenReturn(actualOffer);
 		mockMvc.perform(
                 post("/offers/add")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,11 +127,36 @@ public class OfferControllerTest {
 
 	@Test
 	public void testAddOfferNotAdded() throws Exception {
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date validFromDate = dateformat.parse("2017-01-30");
 		Date validToDate = dateformat.parse("2017-02-20");
 		List<OfferDTO> offer = Arrays.asList(new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate));
+		when(offerService.bulkAdd(any())).thenReturn(null);
+		ResponseEntity<List<OfferDTO>> addOffers = offerController.addOffers(offer);
+		assertThat(addOffers).isNotNull();
+		assertThat(addOffers.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		reset(offerService);
+		when(offerService.bulkAdd(any())).thenReturn(null);
+		mockMvc.perform(
+                post("/offers/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(offer)))
+						.andExpect(status().isInternalServerError());	
+	}
+
+	@Test
+	public void testAddOfferRuntimException() throws Exception {
+
+		Date validFromDate = dateformat.parse("2017-01-30");
+		Date validToDate = dateformat.parse("2017-02-20");
+		List<OfferDTO> offer = Arrays.asList(new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate));
+		when(offerService.addOffer(any())).thenThrow(new RuntimeException());
+		ResponseEntity<List<OfferDTO>> addOffers = offerController.addOffers(offer);
+		assertThat(addOffers).isNotNull();
+		assertThat(addOffers.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+		
+		reset(offerService);
 		when(offerService.bulkAdd(any())).thenReturn(null);
 		
 		mockMvc.perform(
@@ -119,24 +167,7 @@ public class OfferControllerTest {
 	}
 
 	@Test
-	public void testAddOfferRuntimException() throws Exception {
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
-
-		Date validFromDate = dateformat.parse("2017-01-30");
-		Date validToDate = dateformat.parse("2017-02-20");
-		List<OfferDTO> offer = Arrays.asList(new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate));
-		when(offerService.addOffer(any())).thenThrow(new RuntimeException());
-		
-		mockMvc.perform(
-                post("/offers/add")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(offer)))
-						.andExpect(status().isInternalServerError());	
-	}
-
-	@Test
 	public void testFindAllOffersSuccess() throws Exception {
-		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date validFromDate = dateformat.parse("2017-01-30");
 		Date validToDate = dateformat.parse("2017-02-20");
@@ -144,9 +175,14 @@ public class OfferControllerTest {
 				new OfferDTO(1L, "Save 40% at papajohns.com", "To redeem this offer, go to www.papajohns.com, login to your online account and enter code GET40 in the \"Enter a Promo Code\" field. ", 1L, 1L, validFromDate, validToDate),
 				new OfferDTO(2L, "2 for 1 Tour", "Book your Tour with us and receive two tickets for the price of one.", 2L, 2L, validFromDate, validToDate));
 		
-		when(offerService.findAllOffers()).thenReturn(lOfAllOffers);
+		when(offerService.findAllOffers()).thenReturn(lOfAllOffers);		
+		ResponseEntity<List<OfferDTO>> findAll = offerController.findAll();
+		assertThat(findAll.getBody()).isNotNull();
+		assertThat(findAll.getBody()).hasSize(2);		
 		
-		mockMvc.perform(get("/offers/all"))
+		reset(offerService);
+		when(offerService.findAllOffers()).thenReturn(lOfAllOffers);
+		mockMvc.perform(get(FIND_ALL_PATH))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(2)))
 				.andExpect(jsonPath("$[0].id", is(1)))
@@ -160,22 +196,73 @@ public class OfferControllerTest {
 	@Test
 	public void testFindAllOffersNoResults() throws Exception {
 		when(offerService.findAllOffers()).thenReturn(new ArrayList<>());
+		ResponseEntity<List<OfferDTO>> findAll = offerController.findAll();
+		assertThat(findAll.getBody()).isNull();
+		assertThat(findAll.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);		
 		
-		mockMvc.perform(get("/offers/all"))
+		reset(offerService);
+		when(offerService.findAllOffers()).thenReturn(new ArrayList<>());
+		mockMvc.perform(get(FIND_ALL_PATH))
 				.andExpect(status().isNoContent());
 		verify(offerService, times(1)).findAllOffers();
 		verifyNoMoreInteractions(offerService);
 	}
 
 	@Test
-	public void testFindAllOffersNullResult() throws Exception {
-		
+	public void testFindAllOffersNullResult() throws Exception {		
 		when(offerService.findAllOffers()).thenReturn(null);
+		ResponseEntity<List<OfferDTO>> findAll = offerController.findAll();
+		assertThat(findAll.getBody()).isNull();
+		assertThat(findAll.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);		
 		
-		mockMvc.perform(get("/offers/all"))
+		reset(offerService);
+		when(offerService.findAllOffers()).thenReturn(null);		
+		mockMvc.perform(get(FIND_ALL_PATH))
 				.andExpect(status().isNoContent());
 		verify(offerService, times(1)).findAllOffers();
 		verifyNoMoreInteractions(offerService);
+	}
+	
+	
+	@Test
+	public void testFindOfferByMerchantId() throws Exception {
+		Date validFromDate = dateformat.parse("2017-01-30");
+		Date validToDate = dateformat.parse("2017-02-20");
+		List<OfferDTO> offer = Arrays.asList(new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate));
+		
+		when(offerService.findOffersForMerchantId(any())).thenReturn(offer);
+		
+		ResponseEntity<List<OfferDTO>> entity = offerController.findOffersByMerchantId(3L);
+		assertThat(entity, notNullValue());
+		assertThat(entity.getBody(), notNullValue());
+		assertThat(entity.getBody(), hasSize(1));
+		
+		reset(offerService);
+		when(offerService.findOffersForMerchantId(any())).thenReturn(offer);
+		mockMvc.perform(get(FIND_ONE_PATH+"3"))
+				.andExpect(status().isOk());
+				
+		verify(offerService, times(1)).findOffersForMerchantId(any());
+	}
+	
+	
+	@Test
+	public void testFindOfferByMerchantIdNoResult() throws Exception {
+		Date validFromDate = dateformat.parse("2017-01-30");
+		Date validToDate = dateformat.parse("2017-02-20");
+		List<OfferDTO> offer = Arrays.asList(new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate));
+		
+		when(offerService.findOffersForMerchantId(any())).thenReturn(new ArrayList<>());
+		
+		ResponseEntity<List<OfferDTO>> entity = offerController.findOffersByMerchantId(3L);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(entity.getBody()).isNull();
+		
+		reset(offerService);
+		when(offerService.findOffersForMerchantId(any())).thenReturn(offer);
+		mockMvc.perform(get(FIND_ONE_PATH+"3"))
+				.andExpect(status().isOk());				
+		verify(offerService, times(1)).findOffersForMerchantId(any());
 	}
 	
 	
@@ -185,7 +272,6 @@ public class OfferControllerTest {
     private static String asJsonString(final Object obj) {
         try {
             String writeValueAsString = new ObjectMapper().writeValueAsString(obj);
-            System.out.println(writeValueAsString);
 			return writeValueAsString;
         } catch (Exception e) {
             throw new RuntimeException(e);

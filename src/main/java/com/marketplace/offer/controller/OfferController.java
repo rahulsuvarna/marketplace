@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -59,7 +60,7 @@ public class OfferController {
 	 * NOT FOUND	{@link HttpStatus.NO_CONTENT}
      * </pre>
      */
-    @RequestMapping(value = "/offers/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/offers/find/all", method = RequestMethod.GET)
     @ResponseBody
 	public ResponseEntity<List<OfferDTO>> findAll() {
 		log.debug("Servicing request to find all Offers");
@@ -70,5 +71,18 @@ public class OfferController {
 			return new ResponseEntity<List<OfferDTO>>(findAllOffers, HttpStatus.OK);
 		}
 	}
+    
+    @RequestMapping(value = "/offers/find/{merchantId}", method = RequestMethod.GET)
+    @ResponseBody
+	public ResponseEntity<List<OfferDTO>> findOffersByMerchantId( @PathVariable("merchantId") Long merchantId) {
+		log.debug("Servicing request to find Offers from a Merchant");
+		List<OfferDTO> findAllOffers = offerService.findOffersForMerchantId(merchantId);
+		if (findAllOffers == null || findAllOffers.isEmpty()) {
+			return new ResponseEntity<List<OfferDTO>>(HttpStatus.NO_CONTENT);
+		} else {
+			return new ResponseEntity<List<OfferDTO>>(findAllOffers, HttpStatus.OK);
+		}
+	}
+    
 	
 }

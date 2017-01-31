@@ -1,9 +1,11 @@
 package com.marketplace.offer.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -19,19 +21,26 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.marketplace.config.StandardAPIError;
 import com.marketplace.offer.dto.OfferDTO;
+import com.marketplace.offer.repository.OfferRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+@Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data-test-h2.sql")
 public class OfferControllerIntegrationTest {
 
 	private static final String ADD_URI = "/offers/add";
-	private static final String FIND_URI = "/offers/all";
+	private static final String FIND_ONE_URI = "/offers/find/";
+	private static final String FIND_ALL_URI = "/offers/find/all";
 	@Autowired
 	private TestRestTemplate restTemplate;
+	@Autowired
+	private OfferRepository OfferRepository;
 	@Before
 	public void setUp() throws Exception {
 		
@@ -39,14 +48,26 @@ public class OfferControllerIntegrationTest {
 
 
 	@Test
-	public void testFindAllOffers() throws Exception {
+	public void testFindOffers() throws Exception {
 		
-		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_URI, OfferDTO[].class);
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ONE_URI+"3", OfferDTO[].class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
 		assertThat(body, notNullValue());
-		assertThat(body.length, is(3));
+		assertThat(body.length, is(1));
+        
+	}
+
+
+	@Test
+	public void testFindOffersNoResult() throws Exception {
+		
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ONE_URI+"1", OfferDTO[].class);
+        assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        assertThat(response, notNullValue());
+		OfferDTO[] body = response.getBody();
+		assertThat(body).isNull();
         
 	}
 	@Test
@@ -78,4 +99,29 @@ public class OfferControllerIntegrationTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
 	}
 
+	@Test
+	public void testFindAllOffers() throws Exception {
+		
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ALL_URI, OfferDTO[].class);
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response, notNullValue());
+		OfferDTO[] body = response.getBody();
+		assertThat(body, notNullValue());
+		assertThat(body.length, is(1));
+        
+	}
+
+
+	@Test
+	public void testFindAllOffersNoResult() throws Exception {
+		OfferRepository.deleteAll();
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ALL_URI, OfferDTO[].class);
+        assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        assertThat(response, notNullValue());
+		OfferDTO[] body = response.getBody();
+		assertThat(body).isNull();
+        
+	}
+	
+	
 }

@@ -42,4 +42,10 @@ public class OfferServiceImpl implements IOfferService {
 		return offerRepository.save(lOfOfferDTOs);
 	}
 
+	@Override
+	public List<OfferDTO> findOffersForMerchantId(Long merchantId) {
+		// TODO Auto-generated method stub
+		return offerRepository.findByMerchantId(merchantId);
+	}
+
 }

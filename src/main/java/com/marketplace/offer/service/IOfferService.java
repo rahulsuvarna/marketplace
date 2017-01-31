@@ -12,4 +12,6 @@ public interface IOfferService {
 
 	List<OfferDTO> bulkAdd(List<OfferDTO> lOfOfferDTOs);
 
+	List<OfferDTO> findOffersForMerchantId(Long merchantId);
+
 }
