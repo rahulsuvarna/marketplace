@@ -32,9 +32,10 @@ public class OfferController {
 	private IOfferService offerService;    
 	
 	/**
-	 * using POST method to add a list of offers.
+	 * using POST method to add a list of offers for a specific merchant and offertype.
+	 * URI /offers/add
 	 * @param lOfOfferDTOs
-	 * @return An empty message body in case of success or failure 
+	 * @return An empty message body in case of success or failure along with following status code
 	 * <pre>
 	 * SUCCESS	{@link HttpStatus.CREATED}
 	 * Failure	{@link HttpStatus.INTERNAL_SERVER_ERROR}
@@ -54,11 +55,9 @@ public class OfferController {
     
     /**
      * using GET to return all available offers
-     * @return a List of Offers or an empty body
-     * <pre>
-	 * SUCCESS		{@link HttpStatus.OK}
-	 * NOT FOUND	{@link HttpStatus.NO_CONTENT}
-     * </pre>
+     * URI /offers/find/all
+     * @return If offers found then status code HttpStatus.OK along with a list of offers in body
+     * if no offers found then a status code of HttpStatus.NO_CONTENT with empty body.
      */
     @RequestMapping(value = "/offers/find/all", method = RequestMethod.GET)
     @ResponseBody
@@ -72,6 +71,12 @@ public class OfferController {
 		}
 	}
     
+    /**
+     * Provides a list of offers from a specific merchant
+     * @param merchantId
+     * @return If offers found then status code HttpStatus.OK along with a list of offers in body
+     * if no offers found then a status code of HttpStatus.NO_CONTENT with empty body.
+     */
     @RequestMapping(value = "/offers/find/{merchantId}", method = RequestMethod.GET)
     @ResponseBody
 	public ResponseEntity<List<OfferDTO>> findOffersByMerchantId( @PathVariable("merchantId") final Long merchantId) {
