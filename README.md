@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/dsrahul/marketplace.svg?branch=master)](https://travis-ci.org/dsrahul/marketplace) [![Coverage Status](https://coveralls.io/repos/github/dsrahul/marketplace/badge.svg?branch=master)](https://coveralls.io/github/dsrahul/marketplace?branch=master)
 # Coding Challenge "Market Place" Project
 
 This is a Java / Maven / Spring Boot application which exposes some REST services for merchants to create Offers. 
