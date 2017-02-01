@@ -1,7 +1,5 @@
 package com.marketplace.offer.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,7 @@ public class OfferServiceImpl implements IOfferService {
 	 */
 	@Override
 	public OfferDTO addOffer(final OfferDTO anOfferDTO) {
-		assertThat(anOfferDTO).isNotNull();
+		assert anOfferDTO != null;
 		return offerRepository.save(anOfferDTO);
 	}
 
