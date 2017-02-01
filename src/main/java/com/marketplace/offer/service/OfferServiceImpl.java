@@ -1,6 +1,6 @@
 package com.marketplace.offer.service;
 
-import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class OfferServiceImpl implements IOfferService {
 	 */
 	@Override
 	public OfferDTO addOffer(final OfferDTO anOfferDTO) {
-		assertNotNull("OfferDTO is null", anOfferDTO);
+		assertThat(anOfferDTO).isNotNull();
 		return offerRepository.save(anOfferDTO);
 	}
 
