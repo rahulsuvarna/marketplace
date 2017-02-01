@@ -186,8 +186,8 @@
                 <!-- Specify classes to ignore in code coverage -->
                 <configuration>
                     <excludes>
-                        <exclude>**/ui/**</exclude>
-                        <exclude>**/StartSolverUi**</exclude>
+                        <exclude>**/*Application.*</exclude>
+                        <exclude>**/*DTO.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
