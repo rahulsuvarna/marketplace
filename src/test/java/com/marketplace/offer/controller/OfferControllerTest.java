@@ -266,6 +266,26 @@ public class OfferControllerTest {
 	}
 	
 	
+	@Test
+	public void testFindOfferByMerchantIdNullResult() throws Exception {
+		Date validFromDate = dateformat.parse("2017-01-30");
+		Date validToDate = dateformat.parse("2017-02-20");
+		List<OfferDTO> offer = Arrays.asList(new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate));
+		
+		when(offerService.findOffersForMerchantId(any())).thenReturn(null);
+		
+		ResponseEntity<List<OfferDTO>> entity = offerController.findOffersByMerchantId(3L);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(entity.getBody()).isNull();
+		
+		reset(offerService);
+		when(offerService.findOffersForMerchantId(any())).thenReturn(offer);
+		mockMvc.perform(get(FIND_ONE_PATH+"3"))
+				.andExpect(status().isOk());				
+		verify(offerService, times(1)).findOffersForMerchantId(any());
+	}
+	
+	
     /*
      * converts a Java object into JSON representation
      */
