@@ -239,6 +239,21 @@ public class OfferControllerTest {
 		verify(offerService, times(1)).findOffersByMerchantId(21L);
 		verifyNoMoreInteractions(offerService);
 	}
+
+	@Test
+	public void testFindAllOffersRunTimeException() throws Exception {		
+		when(offerService.findOffersByMerchantId(21L)).thenReturn(null);
+		ResponseEntity<List<OfferDTO>> findAll = offerController.findOffersForMerchantId(21L);
+		assertThat(findAll.getBody()).isNull();
+		assertThat(findAll.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);		
+		
+		reset(offerService);
+		when(offerService.findOffersByMerchantId(21L)).thenThrow(new RuntimeException());		
+		mockMvc.perform(get("/merchants/21/offers"))
+				.andExpect(status().isInternalServerError());
+		verify(offerService, times(1)).findOffersByMerchantId(21L);
+		verifyNoMoreInteractions(offerService);
+	}
 	
 	
 	@Test
@@ -301,6 +316,23 @@ public class OfferControllerTest {
 		when(offerService.findMerchantOffersByOfferId(1L, 1L)).thenReturn(null);
 		mockMvc.perform(get("/merchants/1/offers/1"))
 				.andExpect(status().isNoContent());				
+		verify(offerService, times(1)).findMerchantOffersByOfferId(1L, 1L);
+	}
+	
+	
+	@Test
+	public void testFindMerchantOffersByOfferIdRunTimeException() throws Exception {
+		
+		when(offerService.findMerchantOffersByOfferId(1L, 1L)).thenReturn(null);
+		
+		ResponseEntity<List<OfferDTO>> entity = offerController.findMerchantOffersByOfferId(3L, 0L);
+		assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+		assertThat(entity.getBody()).isNull();
+		
+		reset(offerService);
+		when(offerService.findMerchantOffersByOfferId(1L, 1L)).thenThrow(new RuntimeException());
+		mockMvc.perform(get("/merchants/1/offers/1"))
+				.andExpect(status().isInternalServerError());				
 		verify(offerService, times(1)).findMerchantOffersByOfferId(1L, 1L);
 	}
 	
