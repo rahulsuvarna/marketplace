@@ -27,7 +27,7 @@ public class OfferServiceImpl implements IOfferService {
 	 * Service method to find a list of Offers
 	 */
 	@Override
-	public List<OfferDTO> findAllOffers() {
+	public List<OfferDTO> findOffersByMerchantId(Long merchantId) {
 		return offerRepository.findAll();
 	}
 
@@ -41,9 +41,8 @@ public class OfferServiceImpl implements IOfferService {
 	}
 
 	@Override
-	public List<OfferDTO> findOffersForMerchantId(final Long merchantId) {
-		// TODO Auto-generated method stub
-		return offerRepository.findByMerchantId(merchantId);
+	public List<OfferDTO> findMerchantOffersByOfferId(final Long merchantId, Long offerId) {
+		return offerRepository.findByMerchantIdAndId(merchantId, offerId);
 	}
 
 }

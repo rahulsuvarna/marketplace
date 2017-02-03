@@ -14,6 +14,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -31,11 +33,9 @@ import com.marketplace.offer.repository.OfferRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data-test-h2.sql")
-public class OfferControllerIntegrationTest {
-
-	private static final String ADD_URI = "/offers/add";
-	private static final String FIND_ONE_URI = "/offers/find/";
-	private static final String FIND_ALL_URI = "/offers/find/all";
+public class OfferControllerIntegrationTest {	
+	private static final Logger log = LoggerFactory.getLogger(OfferControllerIntegrationTest.class);
+	
 	@Autowired
 	private TestRestTemplate restTemplate;
 	@Autowired
@@ -49,7 +49,7 @@ public class OfferControllerIntegrationTest {
 	@Test
 	public void testFindOffers() throws Exception {
 		
-		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ONE_URI+"3", OfferDTO[].class);
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity("/merchants/3/offers/1", OfferDTO[].class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
@@ -61,8 +61,10 @@ public class OfferControllerIntegrationTest {
 
 	@Test
 	public void testFindOffersNoResult() throws Exception {
+	
+		log.info("testFindOffersNoResult");
 		
-		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ONE_URI+"1", OfferDTO[].class);
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity("/merchants/3/offers/2", OfferDTO[].class);
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
         assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
@@ -71,14 +73,16 @@ public class OfferControllerIntegrationTest {
 	}
 	@Test
 	public void testAddOfferSuccess() throws Exception {
+	
+		log.info("testAddOfferSuccess");
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date validFromDate = dateformat.parse("2017-01-30");
 		Date validToDate = dateformat.parse("2017-02-20");
 		List<OfferDTO> lOfOffers = Arrays.asList(
 				new OfferDTO( "Title1", "Description", 100057L, 1L, validFromDate, validToDate),
-				new OfferDTO( "Title2", "Description", 100057L, 2L, validFromDate, validToDate));
-		ResponseEntity<OfferDTO[]> response = restTemplate.postForEntity(ADD_URI, lOfOffers, OfferDTO[].class);
+				new OfferDTO( "Title2", "Description", 100057L, 1L, validFromDate, validToDate));
+		ResponseEntity<OfferDTO[]> response = restTemplate.postForEntity("/merchants/1/offers", lOfOffers, OfferDTO[].class);
 		assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
 		assertNull(body);
@@ -87,6 +91,8 @@ public class OfferControllerIntegrationTest {
 
 	@Test
 	public void testAddOfferFailure() throws Exception {
+	
+		log.info("testAddOfferFailure");
 		SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 		Date validFromDate = dateformat.parse("2017-01-30");
@@ -94,14 +100,16 @@ public class OfferControllerIntegrationTest {
 		List<OfferDTO> lOfOffers = Arrays.asList(
 				new OfferDTO( "Title1", "Description", 1L, 1L, validFromDate, validToDate),
 				new OfferDTO( "Title2", "Description", 100057L, 2L, validFromDate, validToDate));
-		ResponseEntity<StandardAPIError> response = restTemplate.postForEntity(ADD_URI, lOfOffers, StandardAPIError.class);
-		assertThat(response.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+		ResponseEntity<StandardAPIError> response = restTemplate.postForEntity("/merchants/1/offers", lOfOffers, StandardAPIError.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
 	}
 
 	@Test
 	public void testFindAllOffers() throws Exception {
+	
+		log.info("testFindAllOffers");
 		
-		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ALL_URI, OfferDTO[].class);
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity("/merchants/3/offers", OfferDTO[].class);
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
@@ -113,8 +121,10 @@ public class OfferControllerIntegrationTest {
 
 	@Test
 	public void testFindAllOffersNoResult() throws Exception {
+	
+		log.info("testFindAllOffersNoResult");
 		OfferRepository.deleteAll();
-		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity(FIND_ALL_URI, OfferDTO[].class);
+		ResponseEntity<OfferDTO[]> response = restTemplate.getForEntity("/merchants/21/offers", OfferDTO[].class);
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
         assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();

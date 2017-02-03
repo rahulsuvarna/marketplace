@@ -1,6 +1,7 @@
 package com.marketplace.offer.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -41,10 +42,17 @@ public class OfferController {
 	 * Failure	{@link HttpStatus.INTERNAL_SERVER_ERROR}
 	 * </pre>
 	 */
-    @RequestMapping(value = "/offers/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/merchants/{merchantId}/offers", method = RequestMethod.POST)
     @ResponseBody
-	public ResponseEntity<List<OfferDTO>> addOffers(@Valid @RequestBody final List<OfferDTO> lOfOfferDTOs) {
+	public ResponseEntity<List<OfferDTO>> addOffers(@Valid @RequestBody final List<OfferDTO> lOfOfferDTOs, @PathVariable(name="merchantId", required=true) final Long merchantId) {
 		log.debug("Servicing request to add an Offer");
+		
+		List<OfferDTO> collect = lOfOfferDTOs.stream().filter(offer -> !offer.getMerchantId().equals(merchantId)).collect(Collectors.toList());
+		
+		if (collect.size() > 0) {
+			return new ResponseEntity<List<OfferDTO>>(HttpStatus.BAD_REQUEST);
+		}
+		
 		final List<OfferDTO> lOfAddedOfferDTOs = offerService.bulkAdd(lOfOfferDTOs);
 		if (lOfAddedOfferDTOs == null || lOfAddedOfferDTOs.isEmpty()) {
 			return new ResponseEntity<List<OfferDTO>>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,14 +64,15 @@ public class OfferController {
     /**
      * using GET to return all available offers
      * URI /offers/find/all
+     * @param merchantId TODO
      * @return If offers found then status code HttpStatus.OK along with a list of offers in body
      * if no offers found then a status code of HttpStatus.NO_CONTENT with empty body.
      */
-    @RequestMapping(value = "/offers/find/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/merchants/{merchantId}/offers", method = RequestMethod.GET)
     @ResponseBody
-	public ResponseEntity<List<OfferDTO>> findAll() {
+	public ResponseEntity<List<OfferDTO>> findOffersForMerchantId(@PathVariable(name="merchantId", required=true) final Long merchantId) {
 		log.debug("Servicing request to find all Offers");
-		final List<OfferDTO> findAllOffers = offerService.findAllOffers();
+		final List<OfferDTO> findAllOffers = offerService.findOffersByMerchantId(merchantId);
 		if (findAllOffers == null || findAllOffers.isEmpty()) {
 			return new ResponseEntity<List<OfferDTO>>(HttpStatus.NO_CONTENT);
 		} else {
@@ -77,11 +86,12 @@ public class OfferController {
      * @return If offers found then status code HttpStatus.OK along with a list of offers in body
      * if no offers found then a status code of HttpStatus.NO_CONTENT with empty body.
      */
-    @RequestMapping(value = "/offers/find/{merchantId}", method = RequestMethod.GET)
+    @RequestMapping(value = {"/merchants/{merchantId}/offers/{offerId}"}, method = RequestMethod.GET)
     @ResponseBody
-	public ResponseEntity<List<OfferDTO>> findOffersByMerchantId( @PathVariable("merchantId") final Long merchantId) {
+	public ResponseEntity<List<OfferDTO>> findMerchantOffersByOfferId( @PathVariable(name="merchantId", required=true) final Long merchantId,
+			@PathVariable(name="offerId", required=true) final Long offerId) {
 		log.debug("Servicing request to find Offers from a Merchant");
-		final List<OfferDTO> findAllOffers = offerService.findOffersForMerchantId(merchantId);
+		final List<OfferDTO> findAllOffers = offerService.findMerchantOffersByOfferId(merchantId, offerId);
 		if (findAllOffers == null || findAllOffers.isEmpty()) {
 			return new ResponseEntity<List<OfferDTO>>(HttpStatus.NO_CONTENT);
 		} else {

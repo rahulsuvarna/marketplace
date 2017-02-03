@@ -14,4 +14,4 @@ INSERT INTO TOFFTYPE(ID, OFFER_TYPE) VALUES (100058, '2 for 1');
 INSERT INTO TOFFTYPE(ID, OFFER_TYPE) VALUES (100059, 'FREE');
 INSERT INTO TOFFTYPE(ID, OFFER_TYPE) VALUES (100060, 'BUY AND SAVE');
 --OFFER TYPE DATA
-INSERT INTO TOFFER(TITLE, DESCRIPTION, MERCHANT_ID, TYPE_ID, VALID_FROM, VALID_TO) VALUES ('Save 10% on Purchase', 'For your next ride to or from My Car get you there. Just book online and enter discount code JIMM to receive 10% off your total fare.', 3, 100057, '2017-01-11', '2017-02-11');
+INSERT INTO TOFFER(ID, TITLE, DESCRIPTION, MERCHANT_ID, TYPE_ID, VALID_FROM, VALID_TO) VALUES (1, 'Save 10% on Purchase', 'For your next ride to or from My Car get you there. Just book online and enter discount code JIMM to receive 10% off your total fare.', 3, 100057, '2017-01-11', '2017-02-11');
