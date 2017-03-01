@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,6 +69,8 @@ public class OfferController {
      * @return If offers found then status code HttpStatus.OK along with a list of offers in body
      * if no offers found then a status code of HttpStatus.NO_CONTENT with empty body.
      */
+    //@CrossOrigin(origins = "http://127.0.0.1:61289")
+    @CrossOrigin(origins = "*")
     @RequestMapping(value = "/merchants/{merchantId}/offers", method = RequestMethod.GET)
     @ResponseBody
 	public ResponseEntity<List<OfferDTO>> findOffersForMerchantId(@PathVariable(name="merchantId", required=true) final Long merchantId) {
