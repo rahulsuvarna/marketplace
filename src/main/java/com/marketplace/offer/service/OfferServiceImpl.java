@@ -28,7 +28,7 @@ public class OfferServiceImpl implements IOfferService {
 	 */
 	@Override
 	public List<OfferDTO> findOffersByMerchantId(Long merchantId) {
-		return offerRepository.findAll();
+		return offerRepository.findByMerchantId(merchantId);
 	}
 
 	/**
