@@ -19,7 +19,7 @@ public class OfferServiceImpl implements IOfferService {
 	 */
 	@Override
 	public OfferDTO addOffer(final OfferDTO anOfferDTO) {
-		assert anOfferDTO != null;
+		//assert anOfferDTO != null;
 		return offerRepository.save(anOfferDTO);
 	}
 

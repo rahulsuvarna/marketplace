@@ -44,7 +44,7 @@ import com.marketplace.offer.service.OfferServiceImpl;
 @SpringBootTest
 public class OfferControllerTest {
 
-	private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+	private final SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
 
 	private MockMvc mockMvc;
 

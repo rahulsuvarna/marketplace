@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,6 +33,7 @@ public class OfferServiceImplTest {
 	public void setUp() throws Exception {
 	}
 
+	@Ignore
 	@Test(expected=AssertionError.class)
 	public void testAddOfferAssertionFailure() {
 		when(service.addOffer(null)).thenThrow(new AssertionError());		

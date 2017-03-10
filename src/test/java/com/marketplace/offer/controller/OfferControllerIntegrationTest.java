@@ -6,6 +6,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -20,11 +21,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequest;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 
 import com.marketplace.config.StandardAPIError;
 import com.marketplace.offer.dto.OfferDTO;
@@ -33,16 +40,17 @@ import com.marketplace.offer.repository.OfferRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data-test-h2.sql")
+@TestPropertySource(locations="classpath:application-test.properties")
 public class OfferControllerIntegrationTest {	
 	private static final Logger log = LoggerFactory.getLogger(OfferControllerIntegrationTest.class);
-	
+
 	@Autowired
 	private TestRestTemplate restTemplate;
 	@Autowired
 	private OfferRepository OfferRepository;
 	@Before
 	public void setUp() throws Exception {
-		
+
 	}
 
 
@@ -71,6 +79,31 @@ public class OfferControllerIntegrationTest {
 		assertThat(body).isNull();
         
 	}
+	
+	@Test
+	public void testAddOfferNotAuthorised() throws IOException {
+		ClientHttpResponse clientHttpResponse = restTemplate.withBasicAuth("fakeuser", "fakepassword").execute("/merchants/1/offers", HttpMethod.POST, new RequestCallback() {
+			
+			@Override
+			public void doWithRequest(ClientHttpRequest request) throws IOException {
+				// TODO Auto-generated method stub
+				
+			}
+		}, new ResponseExtractor<ClientHttpResponse>() {
+
+			@Override
+			public ClientHttpResponse extractData(ClientHttpResponse response) throws IOException {
+				log.info("======================="+response.getStatusCode().toString());
+				return response;
+			}
+		});
+		
+		assertThat(clientHttpResponse, notNullValue());
+		assertThat(clientHttpResponse.getStatusCode(), is(HttpStatus.UNAUTHORIZED));
+		
+	}
+	
+	
 	@Test
 	public void testAddOfferSuccess() throws Exception {
 	
@@ -82,7 +115,7 @@ public class OfferControllerIntegrationTest {
 		List<OfferDTO> lOfOffers = Arrays.asList(
 				new OfferDTO( "Title1", "Description", 100057L, 1L, validFromDate, validToDate),
 				new OfferDTO( "Title2", "Description", 100057L, 1L, validFromDate, validToDate));
-		ResponseEntity<OfferDTO[]> response = restTemplate.postForEntity("/merchants/1/offers", lOfOffers, OfferDTO[].class);
+		ResponseEntity<OfferDTO[]> response = restTemplate.withBasicAuth("user", "password").postForEntity("/merchants/1/offers", lOfOffers, OfferDTO[].class);
 		assertThat(response, notNullValue());
 		OfferDTO[] body = response.getBody();
 		assertNull(body);
@@ -100,7 +133,7 @@ public class OfferControllerIntegrationTest {
 		List<OfferDTO> lOfOffers = Arrays.asList(
 				new OfferDTO( "Title1", "Description", 1L, 1L, validFromDate, validToDate),
 				new OfferDTO( "Title2", "Description", 100057L, 2L, validFromDate, validToDate));
-		ResponseEntity<StandardAPIError> response = restTemplate.postForEntity("/merchants/1/offers", lOfOffers, StandardAPIError.class);
+		ResponseEntity<StandardAPIError> response = restTemplate.withBasicAuth("user", "password").postForEntity("/merchants/1/offers", lOfOffers, StandardAPIError.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.BAD_REQUEST));
 	}
 
