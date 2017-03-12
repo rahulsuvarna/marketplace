@@ -16,4 +16,4 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - target\marketplace-0.0.1-SNAPSHOT.war
+    - target/marketplace-0.0.1-SNAPSHOT.war
