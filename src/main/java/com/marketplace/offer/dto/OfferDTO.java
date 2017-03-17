@@ -34,6 +34,15 @@ public class OfferDTO {
 	@OneToOne
 	@JoinColumn(name = "TYPE_ID", nullable = false, insertable = false, updatable = false)
 	private OfferTypeDTO offerType;
+	
+	
+	@Column(name = "CATEGORY_ID", nullable=false)
+	private Long categoryId;
+
+	@JsonIgnore
+	@OneToOne
+	@JoinColumn(name = "CATEGORY_ID", nullable = false, insertable = false, updatable = false)
+	private CategoryDTO categoryDTO;
 
 	@Column(name = "MERCHANT_ID", nullable=false)
 	private Long merchantId;
@@ -54,17 +63,18 @@ public class OfferDTO {
 	public OfferDTO() {
 	}
 
-	public OfferDTO(String title, String description, Long typeId, Long merchantId, Date validFrom, Date validTo) {
+	public OfferDTO(String title, String description, Long typeId, Long merchantId, Long categoryId, Date validFrom, Date validTo) {
 		super();
 		this.title = title;
 		this.description = description;
 		this.typeId = typeId;
 		this.merchantId = merchantId;
+		this.categoryId = categoryId;
 		this.validFrom = validFrom;
 		this.validTo = validTo;
 	}
 
-	public OfferDTO(Long id, String title, String description, Long typeId, Long merchantId, Date validFrom,
+	public OfferDTO(Long id, String title, String description, Long typeId, Long categoryId, Long merchantId, Date validFrom,
 			Date validTo) {
 		super();
 		this.id = id;
@@ -72,6 +82,7 @@ public class OfferDTO {
 		this.description = description;
 		this.typeId = typeId;
 		this.merchantId = merchantId;
+		this.categoryId = categoryId;
 		this.validFrom = validFrom;
 		this.validTo = validTo;
 	}
@@ -112,10 +123,30 @@ public class OfferDTO {
 		return merchantDTO;
 	}
 
-	@Override
-	public String toString() {
-		return "OfferDTO [id=" + id + ", title=" + title + ", description=" + description + ", typeId=" + typeId
-				+ ", merchantId=" + merchantId + ", validFrom=" + validFrom + ", validTo=" + validTo + "]";
+	public Long getCategoryId() {
+		return categoryId;
 	}
+
+	public CategoryDTO getCategoryDTO() {
+		return categoryDTO;
+	}
+
+	public OfferDTO(Long id, String title, String description, Long typeId, OfferTypeDTO offerType, Long categoryId,
+			CategoryDTO categoryDTO, Long merchantId, MerchantDTO merchantDTO, Date validFrom, Date validTo) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.typeId = typeId;
+		this.offerType = offerType;
+		this.categoryId = categoryId;
+		this.categoryDTO = categoryDTO;
+		this.merchantId = merchantId;
+		this.merchantDTO = merchantDTO;
+		this.validFrom = validFrom;
+		this.validTo = validTo;
+	}
+	
+	
 
 }

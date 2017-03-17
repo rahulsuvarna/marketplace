@@ -45,8 +45,8 @@ public class OfferServiceImplTest {
 
 		Date validFromDate = dateformat.parse("2017-01-30");
 		Date validToDate = dateformat.parse("2017-02-20");
-		OfferDTO offer = new OfferDTO( "Title", "Description", 1L, 1L, validFromDate, validToDate);
-		OfferDTO expected = new OfferDTO(1L, "Title", "Description", 1L, 1L, validFromDate, validToDate);
+		OfferDTO offer = new OfferDTO( "Title", "Description", 1L, 1L, 1L, validFromDate, validToDate);
+		OfferDTO expected = new OfferDTO(1L, "Title", "Description", 1L, 1L, 1L, validFromDate, validToDate);
 		when(offerRepository.save(offer)).thenReturn(expected);
 		
 		OfferDTO actual = service.addOffer(offer);

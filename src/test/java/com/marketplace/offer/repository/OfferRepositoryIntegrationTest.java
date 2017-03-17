@@ -4,9 +4,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,7 +35,8 @@ public class OfferRepositoryIntegrationTest {
 	@Autowired
 	private OfferRepository offerRepository;
 	@Before
-	public void setUp() throws Exception {		
+	public void setUp() throws Exception {	
+		
 		offerRepository.deleteAll();
 	}
 
@@ -42,7 +45,7 @@ public class OfferRepositoryIntegrationTest {
 		final Date validFromDate = dateformat.parse("2017-01-30");
 		final Date validToDate = dateformat.parse("2017-02-20");
 		
-		final OfferDTO offerDTO = new OfferDTO( "Title1", "Description", 100057L, 1L, validFromDate, validToDate);
+		final OfferDTO offerDTO = new OfferDTO( "Title1", "Description", 100057L, 1L, 200057L, validFromDate, validToDate);
 		final OfferDTO savedOffer = offerRepository.save(offerDTO);
 
 		assertThat(savedOffer, notNullValue());
@@ -60,7 +63,7 @@ public class OfferRepositoryIntegrationTest {
 		final Date validFromDate = dateformat.parse("2017-01-30");
 		final Date validToDate = dateformat.parse("2017-02-20");
 		
-		final OfferDTO offerDTO = new OfferDTO( "Title1", "Description", 2L, 1L, validFromDate, validToDate);
+		final OfferDTO offerDTO = new OfferDTO( "Title1", "Description", 2L, 1L, 1L, validFromDate, validToDate);
 		
 		assertThatThrownBy(() -> offerRepository.save(offerDTO)).isInstanceOf(DataIntegrityViolationException.class);
 	}
