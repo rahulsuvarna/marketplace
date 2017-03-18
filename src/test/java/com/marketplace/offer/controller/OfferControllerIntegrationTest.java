@@ -29,7 +29,7 @@ import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.Sql.ExecutionPhase;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RequestCallback;
 import org.springframework.web.client.ResponseExtractor;
 
@@ -37,7 +37,7 @@ import com.marketplace.config.StandardAPIError;
 import com.marketplace.offer.dto.OfferDTO;
 import com.marketplace.offer.repository.OfferRepository;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
 @Sql(executionPhase = ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data-test-h2.sql")
 @TestPropertySource(locations="classpath:application-test.properties")
@@ -50,7 +50,6 @@ public class OfferControllerIntegrationTest {
 	private OfferRepository OfferRepository;
 	@Before
 	public void setUp() throws Exception {
-
 	}
 
 
@@ -86,8 +85,6 @@ public class OfferControllerIntegrationTest {
 			
 			@Override
 			public void doWithRequest(ClientHttpRequest request) throws IOException {
-				// TODO Auto-generated method stub
-				
 			}
 		}, new ResponseExtractor<ClientHttpResponse>() {
 
