@@ -118,6 +118,36 @@
 			<artifactId>hsqldb</artifactId>
 			<scope>runtime</scope>
 		</dependency> -->
+
+		<!--BDD Setup-->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-support</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-java</artifactId>
+			<version>LATEST</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-junit</artifactId>
+			<version>LATEST</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock -->
+		<dependency>
+			<groupId>com.github.tomakehurst</groupId>
+			<artifactId>wiremock</artifactId>
+			<version>1.46</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -263,9 +293,6 @@
 
 		</plugins>
 	</build>
-
-
-
 
 	<reporting>
 		<plugins>
