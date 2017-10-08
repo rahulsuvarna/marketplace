@@ -91,7 +91,8 @@ public class OfferControllerTest {
                 post("/merchants/1/offers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(lOfOffers)))
-						.andExpect(status().isCreated()).andDo(print());
+						.andExpect(status().isCreated());
+						//.andDo(print());
 		verify(offerService, times(1)).bulkAdd(any());
         verifyNoMoreInteractions(offerService);		
 	}
@@ -117,7 +118,8 @@ public class OfferControllerTest {
                 post("/merchants/1/offers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(offer)))
-						.andExpect(status().isCreated()).andDo(print());
+						.andExpect(status().isCreated());
+						//.andDo(print());
 		verify(offerService, times(1)).bulkAdd(any());
         verifyNoMoreInteractions(offerService);		
 	}
@@ -272,7 +274,7 @@ public class OfferControllerTest {
 		reset(offerService);
 		when(offerService.findMerchantOffersByOfferId(1L, 1L)).thenReturn(offer);
 		mockMvc.perform(get("/merchants/1/offers/1"))
-				.andExpect(status().isOk()).andDo(print())
+				.andExpect(status().isOk())//.andDo(print())
 				.andExpect(jsonPath("$", hasSize(1)))
 				.andExpect(jsonPath("$[0].id", is(1)))
 				.andExpect(jsonPath("$[0].title", is("Title")))

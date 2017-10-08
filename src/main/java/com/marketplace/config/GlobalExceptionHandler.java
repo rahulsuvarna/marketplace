@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler({ Exception.class })
 	public ResponseEntity<Object> handleAll(Exception ex, WebRequest request) {
-		log.error("Exception occured : ", ex);
+		//log.error("Exception occured : ", ex);
 		StandardAPIError apiError = new StandardAPIError(HttpStatus.INTERNAL_SERVER_ERROR,
 				new Date() ,"There was an error while processing the request", "Please contact Administrator");
 		return new ResponseEntity<Object>(apiError, new HttpHeaders(), apiError.getStatus());
