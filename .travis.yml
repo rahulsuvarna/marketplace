@@ -1,7 +1,7 @@
 language: java
 sudo: required
-script: mvn test
-after_success:
-  - mvn clean integration-test jacoco:report coveralls:report
+script: mvn clean integration-test jacoco:report coveralls:report
+#after_success:
+#  - mvn clean integration-test jacoco:report coveralls:report
 jdk:
   - oraclejdk8
