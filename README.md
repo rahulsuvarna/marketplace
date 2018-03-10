@@ -71,7 +71,7 @@ Merchant and OfferType data are pre-populated into the database using *import.sq
 |100059 |FREE               |
 |100060 |BUY AND SAVE       |
 
-
+=== The reminder of this readme is not accurate. Please refer to swagger document
 ## Endpoints to call:
 ### Create an Offer resource
 ```
