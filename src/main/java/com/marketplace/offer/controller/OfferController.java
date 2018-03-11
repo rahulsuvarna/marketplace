@@ -65,7 +65,7 @@ public class OfferController {
     /**
      * using GET to return all available offers
      * URI /offers/find/all
-     * @param merchantId TODO
+     * @param merchantId
      * @return If offers found then status code HttpStatus.OK along with a list of offers in body
      * if no offers found then a status code of HttpStatus.NO_CONTENT with empty body.
      */
