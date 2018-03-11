@@ -26,7 +26,7 @@ public class MarketPlaceApplication {
         return new Docket(DocumentationType.SWAGGER_2)
                 .groupName("Market Place")
                 .select()
-                .apis(basePackage("com.marketplace.offer.controller"))
+                .apis(basePackage("com.marketplace"))
                 // .paths(regex("/merchants/"))
                 // .paths(PathSelectors.any())
                 .build()

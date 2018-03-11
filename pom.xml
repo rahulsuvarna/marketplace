@@ -181,6 +181,12 @@
 			<version>LATEST</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>info.cukes</groupId>
+			<artifactId>cucumber-spring</artifactId>
+			<version>LATEST</version>
+			<scope>test</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.github.tomakehurst/wiremock -->
 		<dependency>
 			<groupId>com.github.tomakehurst</groupId>
@@ -193,7 +199,6 @@
 			<version>4.0.0</version>
 			<scope>provided</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>

@@ -1,0 +1,48 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch)-MarketPlaceApplication<marketplace>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "com.marketplace.MarketPlaceApplication",
+            "projectName": "marketplace",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-MarketPlaceApplicationTest<marketplace>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "com.marketplace.config.MarketPlaceApplicationTest",
+            "projectName": "marketplace",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug CUCUMBER",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopOnEntry": false,
+            "mainClass": "com.marketplace.cucumber.RunAllCucumberIT",
+            "projectName": "marketplace",
+            "args": ""
+        },
+        {
+            "type": "java",
+            "name": "Debug (Attach)",
+            "request": "attach",
+            "hostName": "localhost",
+            "port": 0
+        }
+    ]
+}
