@@ -1,3 +1,5 @@
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/rahulsuvarna/marketplace)
+
 [![Build Status](https://travis-ci.org/dsrahul/marketplace.svg?branch=master)](https://travis-ci.org/dsrahul/marketplace) [![Coverage Status](https://coveralls.io/repos/github/dsrahul/marketplace/badge.svg?branch=master)](https://coveralls.io/github/dsrahul/marketplace?branch=master) [ ![Codeship Status for dsrahul/marketplace](https://app.codeship.com/projects/4a0f6040-8ee3-0135-0d60-3a7a536cf0eb/status?branch=master)](https://app.codeship.com/projects/249830)
 # Coding Challenge "Market Place" Project
 
